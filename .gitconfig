@@ -87,4 +87,5 @@
 [credential]
   azreposCredentialType = oauth
   gitHubAuthModes = oauth
+  helper =
   helper = /usr/local/share/gcm-core/git-credential-manager
