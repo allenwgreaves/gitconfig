@@ -1,0 +1,90 @@
+[core]
+  editor = code --wait --new-window
+  pager = less - F -X
+  autocrlf = input
+[rerere]
+  enabled = true
+[branch]
+  autosetuprebase = always
+[pull]
+  rebase = true
+  autoStash = true
+[alias]
+  acp = "!f() { git add . ; git cia ; git pubp; }; f"
+  br = branch
+  brs = branch --sort=-committerdate
+  bra = branch --sort=-committerdate -a
+  cb = checkout -b
+  ci = commit
+  cia = commit --amend -C HEAD --no-verify
+  cim = commit -m
+  co = checkout
+  cp = cherry-pick
+  editconfig = config --global --edit
+  fod = fetch origin dev:dev
+  foma = fetch origin main:main
+  k = "!f() { gitk ${1:-} & }; f"
+  ka = "!f() { gitk --all & }; f"
+  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+  lgbw = log --graph --oneline --abbrev-commit --date=relative 
+  lgx = "!f() { git push -u ${1:-origin} `git symbolic-ref HEAD`; }; f"
+  m = merge
+  mc = merge --commit
+  mt = mergetool
+  ng = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+  oy = status
+  po = push origin
+  pod = pull origin dev:dev
+  poma = pull origin main:main
+  pub = "!f() { git push -u ${1:-origin} `git symbolic-ref HEAD`; }; f"
+  pushf = "!f() { git push --force -u ${1:-origin} `git symbolic-ref HEAD`; }; f"  
+  pubp = "!f() { git push --force-with-lease -u ${1:-origin} `git symbolic-ref HEAD`; }; f"  
+  r = reset
+  rh = reset --hard
+  rm = reset --mixed
+  rs = reset --soft
+  rb = rebase
+  rba = rebase --abort
+  rbc = rebase --continue
+  rbs = rebase --skip
+  rbi = rebase -i
+  rbt = "!f() { git rebase --onto $1 head~$2; }; f"
+  recent = "!r() { refbranch=$1 count=$2; git for-each-ref --sort=-committerdate refs/heads --format='%(refname:short)|%(HEAD)%(color:yellow)%(refname:short)|%(color:bold green)%(committerdate:relative)|%(color:blue)%(subject)|%(color:magenta)%(authorname)%(color:reset)' --color=always --count=${count:-20} | while read line; do branch=$(echo \"$line\" | awk 'BEGIN { FS = \"|\" }; { print $1 }' | tr -d '*'); ahead=$(git rev-list --count \"${refbranch:-origin/dev}..${branch}\"); behind=$(git rev-list --count \"${branch}..${refbranch:-origin/master}\"); colorline=$(echo \"$line\" | sed 's/^[^|]*|//'); echo \"$ahead|$behind|$colorline\" | awk -F'|' -vOFS='|' '{$5=substr($5,1,70)}1' ; done | ( echo \"ahead|behind||branch|lastcommit|message|author\\n\" && cat) | column -ts'|';}; r"
+  cpa = cherry-pick --abort
+  cpc = cherry-pick --continue
+  cps = cherry-pick --skip
+  rl = reflog
+  sb = show-branch
+  st = status
+  staged = diff --cached
+  ucp = "!f() { git add -u ; git cia ; git pubp; }; f"
+  unstage = reset HEAD --
+  last = log -1 HEAD
+  aa = "!f(){ git config --global alias.$1 $2; }; f"
+[merge]
+  tool = code
+[mergetool]
+  keepBackup = false
+[mergetool "code"]
+  cmd = code -n --wait --merge $REMOTE $LOCAL $BASE $MERGED
+  trustExitCode = true
+  keepBackup = false
+[diff]
+  tool = code
+  colorMoved = zebra
+[difftool "code"]
+  cmd = code -n --wait --diff $REMOTE $LOCAL
+[pager]
+  branch = false
+[commit]
+  template = ~/.gitmessage
+[fetch]
+  prune = true
+[rebase]
+  autoStash = true
+[gui]
+  fontdiff = -family Menlo -size 12 -weight normal -slant roman -underline 0 -overstrike 0
+[credential]
+  azreposCredentialType = oauth
+  gitHubAuthModes = oauth
+  helper = /usr/local/share/gcm-core/git-credential-manager
